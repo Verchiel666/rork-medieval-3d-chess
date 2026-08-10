@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- `viewport-fit=cover` 让大厅在刘海屏上从边缘铺满到边缘，同时
+         也是让 `env(safe-area-inset-*)` 解析为真实像素的关键——没有它，
+         iOS 会把所有安全区内边距报告为 0，界面会藏进刘海和 Home 指示条下面。 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>王翼弃兵 — 中世纪 3D 国际象棋</title>
+    <meta name="description" content="火把照亮的城堡大厅中的电影级 3D 国际象棋。可与电脑对手或朋友对弈。" />
+    <meta name="theme-color" content="#05060a" />
+
+    <!-- 分享卡片。X、Facebook、Discord、iMessage 和 Slack 都从原始
+         HTML 中读取这些信息——它们从不运行应用——所以图片必须是真实
+         静态文件并使用绝对 URL。相对路径 `/banner.jpg` 会被 X 的爬虫
+         静默丢弃，这就是链接曾经只能展开为纯文本的原因。
+         若站点迁移到其他域名，请更新 `og:url` / `og:image`。 -->
+    <meta property="og:site_name" content="王翼弃兵" />
+    <meta property="og:title" content="王翼弃兵 — 史诗 3D 国际象棋对战" />
+    <meta property="og:description" content="统帅你的军队，智胜你的对手。火把照亮的城堡大厅中的电影级 3D 国际象棋——与引擎或朋友对弈。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://g9111r67kl6tq85g540sd-web.rork.live/" />
+    <meta property="og:image" content="https://g9111r67kl6tq85g540sd-web.rork.live/banner.jpg" />
+    <meta property="og:image:secure_url" content="https://g9111r67kl6tq85g540sd-web.rork.live/banner.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="900" />
+    <meta property="og:image:alt" content="两支 3D 国际象棋军队在城堡大厅中隔着发光棋盘对峙" />
+
+    <!-- `summary_large_image` 让 X 显示全宽横幅，
+         而不是文字旁边的小缩略图。 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="王翼弃兵 — 史诗 3D 国际象棋对战" />
+    <meta name="twitter:description" content="统帅你的军队，智胜你的对手。火把照亮的城堡大厅中的电影级 3D 国际象棋。" />
+    <meta name="twitter:image" content="https://g9111r67kl6tq85g540sd-web.rork.live/banner.jpg" />
+    <meta name="twitter:image:alt" content="两支 3D 国际象棋军队在城堡大厅中隔着发光棋盘对峙" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
