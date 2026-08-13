@@ -101,6 +101,9 @@ const Carousel = ({
       return;
     }
 
+    // shadcn 官方模板：api 仅在挂载后经 context 可用，
+    // 订阅前需同步报告一次，无法在渲染期完成。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     onSelect(api);
     api.on("reInit", onSelect);
     api.on("select", onSelect);

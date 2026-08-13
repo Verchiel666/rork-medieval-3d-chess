@@ -164,7 +164,11 @@ export function GameOverModal({
 function NextDuelCountdown({ getRemaining, onHold }: { getRemaining: () => number | null; onHold: () => void }) {
   const [remaining, setRemaining] = useState<number | null>(() => getRemaining());
   const read = useRef(getRemaining);
-  read.current = getRemaining;
+  // 渲染期只读取 props 初始化；ref 的持续同步放到 commit 阶段，
+  // 避免在渲染期间写 ref（react-hooks/refs）。
+  useEffect(() => {
+    read.current = getRemaining;
+  });
 
   useEffect(() => {
     const timer = setInterval(() => setRemaining(read.current()), 100);

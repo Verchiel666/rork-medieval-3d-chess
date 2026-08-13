@@ -123,10 +123,13 @@ export const MoveLedger = memo(function MoveLedger({
   }, [copied]);
 
   // 棋谱卸载或有新着法落下时，丢弃棋盘上的预览高亮。
-  useEffect(() => {
+  // 渲染期调整：着法数变化时立即复位，避免在 effect 中同步 setState。
+  const [prevMovesCount, setPrevMovesCount] = useState(moves.length);
+  if (prevMovesCount !== moves.length) {
+    setPrevMovesCount(moves.length);
     setActivePly(null);
     onPreview(null);
-  }, [moves.length, onPreview]);
+  }
 
   useEffect(() => () => onPreview(null), [onPreview]);
 

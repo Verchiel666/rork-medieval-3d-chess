@@ -548,6 +548,8 @@ const SidebarMenuSkeleton = ({
   showIcon?: boolean;
 }) => {
   // Random width between 50 to 90%.
+  // shadcn 官方模板：骨架屏占位宽度故意随机，视觉效果所需。
+  // eslint-disable-next-line react-hooks/purity
   const width = React.useMemo(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
   }, []);

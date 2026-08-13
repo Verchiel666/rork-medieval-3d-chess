@@ -266,7 +266,12 @@ export function GameShell() {
   const [cameraFlipped, setCameraFlipped] = useState(false);
   /** 平面俯瞰地图：任何 3D 棋子都挡不住格子。 */
   const [tactical, setTactical] = useState(false);
-  const [unsupported, setUnsupported] = useState(false);
+  /** WebGL 能力探测：渲染期同步完成，避免在启动 effect 中同步 setState。 */
+  const [unsupported, setUnsupported] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const probe = document.createElement("canvas");
+    return !(probe.getContext("webgl2") ?? probe.getContext("webgl"));
+  });
   const [notice, setNotice] = useState<string | null>(null);
   /** 对战录制模式：剥离所有面板，画面只剩棋盘。 */
   const [cinema, setCinema] = useState(false);
@@ -279,13 +284,8 @@ export function GameShell() {
     if (!canvas) return;
 
     // 无头/被拦截的环境无法创建 WebGL 上下文——大声报错，
-    // 给出可读信息，而不是黑屏。
-    const probe = document.createElement("canvas");
-    const supported = Boolean(probe.getContext("webgl2") ?? probe.getContext("webgl"));
-    if (!supported) {
-      setUnsupported(true);
-      return;
-    }
+    // 给出可读信息，而不是黑屏。探测已在 useState 初始化器中完成。
+    if (unsupported) return;
 
     let engine: SceneEngine;
     try {
@@ -316,6 +316,8 @@ export function GameShell() {
       );
     } catch (error) {
       console.error("[ui] could not start the renderer", error);
+      // 异步异常路径：引擎构造失败时置为不支持，属于错误处理而非初始化同步。
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setUnsupported(true);
       return;
     }
@@ -611,12 +613,15 @@ export function GameShell() {
   // ------------------------------------------------------- 对战裁决
   const showcaseFinished = phase === "playing" && snapshot.mode === "demo" && snapshot.status === "over";
   const [verdictReady, setVerdictReady] = useState(false);
+  // 渲染期调整：对局结束标志复位时立即撤销裁决，避免在 effect 中同步 setState。
+  const [lastFinished, setLastFinished] = useState(showcaseFinished);
+  if (lastFinished !== showcaseFinished) {
+    setLastFinished(showcaseFinished);
+    if (!showcaseFinished) setVerdictReady(false);
+  }
 
   useEffect(() => {
-    if (!showcaseFinished) {
-      setVerdictReady(false);
-      return;
-    }
+    if (!showcaseFinished) return;
     const timer = setTimeout(() => setVerdictReady(true), SHOWCASE_VERDICT_DELAY_MS);
     return () => clearTimeout(timer);
   }, [showcaseFinished]);

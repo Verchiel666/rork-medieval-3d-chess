@@ -113,7 +113,7 @@ function useRoomForRail(): boolean {
   useEffect(() => {
     const query = window.matchMedia("(min-width: 1024px)");
     const onChange = (event: MediaQueryListEvent): void => setWide(event.matches);
-    setWide(query.matches);
+    // 初始值已在 useState 初始化器中读取，这里只订阅变化。
     query.addEventListener("change", onChange);
     return () => query.removeEventListener("change", onChange);
   }, []);
@@ -683,14 +683,20 @@ function FieldTally({ snapshot, getElapsed }: { snapshot: GameSnapshot; getElaps
   const running = snapshot.status === "playing" && !snapshot.paused;
   const [elapsed, setElapsed] = useState<ElapsedState>(() => getElapsed());
 
-  // 半秒节拍，让秒位翻转看不到延迟；
-  // 每当回合或运行状态变化时立即读取一次。
-  useEffect(() => {
+  // 渲染期调整：回合/运行状态变化时立即同步一次读数，effect 只负责节拍。
+  const turnKey = `${running}:${snapshot.turn}:${snapshot.moves.length}`;
+  const [prevTurnKey, setPrevTurnKey] = useState(turnKey);
+  if (turnKey !== prevTurnKey) {
+    setPrevTurnKey(turnKey);
     setElapsed(getElapsed());
+  }
+
+  // 半秒节拍，让秒位翻转看不到延迟。
+  useEffect(() => {
     if (!running) return;
     const id = setInterval(() => setElapsed(getElapsed()), 500);
     return () => clearInterval(id);
-  }, [getElapsed, running, snapshot.turn, snapshot.moves.length]);
+  }, [getElapsed, running]);
 
   const losses: Record<Faction, number> = { w: 0, b: 0 };
   for (const piece of snapshot.captured) losses[piece.color] += 1;
