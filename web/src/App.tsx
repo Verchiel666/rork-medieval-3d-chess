@@ -13,7 +13,8 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      {/* react-router v7 已默认启用 v6 时代的 future flags */}
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
           {/* 所有自定义路由都要加在通配符 "*" 路由之上 */}

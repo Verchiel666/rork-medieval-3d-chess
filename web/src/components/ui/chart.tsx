@@ -93,6 +93,17 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+// recharts v3 不再从 Tooltip/Legend props 中透出 payload/label 类型，
+// 显式声明 payload item 结构以保持类型安全。
+type ChartPayloadItem = {
+  value?: string | number | Array<string | number>;
+  name?: string | number;
+  dataKey?: string | number;
+  color?: string;
+  fill?: string;
+  payload?: Record<string, unknown>;
+};
+
 const ChartTooltipContent = ({
   ref,
   active,
@@ -108,8 +119,20 @@ const ChartTooltipContent = ({
   color,
   nameKey,
   labelKey,
-}: React.ComponentPropsWithRef<typeof RechartsPrimitive.Tooltip> &
-  React.ComponentProps<"div"> & {
+}: React.ComponentPropsWithRef<"div"> & {
+    active?: boolean;
+    payload?: ChartPayloadItem[];
+    label?: React.ReactNode;
+    labelFormatter?: (value: unknown, payload: ChartPayloadItem[]) => React.ReactNode;
+    labelClassName?: string;
+    formatter?: (
+      value: unknown,
+      name: unknown,
+      item: ChartPayloadItem,
+      index: number,
+      payload: unknown,
+    ) => React.ReactNode;
+    color?: string;
     hideLabel?: boolean;
     hideIndicator?: boolean;
     indicator?: "line" | "dot" | "dashed";
@@ -226,10 +249,11 @@ const ChartLegendContent = ({
   payload,
   verticalAlign = "bottom",
   nameKey,
-}: React.ComponentPropsWithRef<"div"> &
-  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+}: React.ComponentPropsWithRef<"div"> & {
     hideIcon?: boolean;
     nameKey?: string;
+    payload?: ChartPayloadItem[];
+    verticalAlign?: "top" | "bottom";
   }) => {
   const { config } = useChart();
 
@@ -248,7 +272,7 @@ const ChartLegendContent = ({
 
         return (
           <div
-            key={item.value}
+            key={String(item.value)}
             className={cn("flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground")}
           >
             {itemConfig?.icon && !hideIcon ? (

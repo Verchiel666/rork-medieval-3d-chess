@@ -703,7 +703,7 @@ export class GameController extends Emitter<ControllerEvents> {
     try {
       move = this.chess.move({ from, to, promotion: promotion ?? "q" }) as Move;
     } catch {
-      move = null;
+      // chess.move 抛异常时 move 保持 null，无需重复赋值
     }
     if (!move) {
       this.emit("illegal", { from, to });

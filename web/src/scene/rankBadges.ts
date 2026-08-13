@@ -536,7 +536,7 @@ export function promotionPlaqueTexture(kind: PieceKind, faction: Faction, label:
   ctx.textAlign = "left";
   // 中文军衔名（如"王后"）在 Cinzel 中没有字形，需要 CJK 字体回退；
   // 西文标签仍优先用 Cinzel 保持原版观感。
-  const isCjk = /[　-鿿]/.test(label);
+  const isCjk = /[\u3000-\u9fff]/.test(label);
   ctx.font = isCjk
     ? `600 50px "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif`
     : `600 54px "Cinzel", Georgia, serif`;
