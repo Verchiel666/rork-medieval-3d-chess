@@ -12,6 +12,12 @@ updates:
           - "minor"
           - "patch"
     open-pull-requests-limit: 10
+    ignore:
+      # typescript-eslint (截至 8.67.x) peer 仅支持 <6.1.0，TypeScript 7 (tsgo)
+      # 无稳定编程 API（等 7.1）。生态跟进前忽略 TS 7+ 的升级 PR。
+      # 参考 typescript-eslint issue #12518。
+      - dependency-name: "typescript"
+        versions: [">= 7.0.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
