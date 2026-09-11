@@ -18,6 +18,18 @@ updates:
       # 参考 typescript-eslint issue #12518。
       - dependency-name: "typescript"
         versions: [">=7.0.0"]
+      # vitest / @vitest/browser-playwright 在 package.json 中均为精确版本
+      # 4.1.11（无 ^），必须成套同步升级；Dependabot 拆成独立 PR 会导致 peer
+      # 冲突（vitest-browser-react 2.x 的 peer 历史上限）。vitest 5.0.0 刚发布，
+      # 生态刚跟进，暂忽略 major，待稳定后手动成套评估。
+      - dependency-name: "vitest"
+        versions: [">=5.0.0"]
+      - dependency-name: "@vitest/browser-playwright"
+        versions: [">=5.0.0"]
+      # @types/node 应对齐 CI 运行时 Node 22（engines >=20.19），避免 major
+      # 跳级超前运行时（历史：09-08 关 #21、09-11 关 #25 均因 26 超前）。
+      - dependency-name: "@types/node"
+        versions: [">=23.0.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
